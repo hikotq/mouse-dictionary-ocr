@@ -1,6 +1,6 @@
 {
-  "name": "Chrome Extension Webpack",
-  "options_page": "options.html",
+  "name": "mouse-directory-ocr",
+  "version": "1.0",
   "background": {
     "scripts": [ "background.bundle.js" ]
    },
