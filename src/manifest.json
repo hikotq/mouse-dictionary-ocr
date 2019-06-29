@@ -2,12 +2,8 @@
   "name": "Chrome Extension Webpack",
   "options_page": "options.html",
   "background": {
-    "page": "background.html"
-  },
-  "browser_action": {
-    "default_popup": "popup.html",
-    "default_icon": "icon-34.png"
-  },
+    "scripts": [ "background.bundle.js" ]
+   },
   "icons": {
     "128": "icon-128.png"
   },
@@ -18,7 +14,8 @@
     }
   ], 
   "permissions": [
-    "<all_urls>"
+    "<all_urls>",
+    "notifications"
   ],
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"

@@ -1,3 +1,6 @@
+import '../img/icon48.png';
+import '../img/icon128.png';
+
 import { TesseractWorker } from 'tesseract.js';
 const worker = new TesseractWorker();
 
@@ -6,11 +9,79 @@ const DIALOG_ID = "____MOUSE_DICTIONARY_cf744bd007850b04601dc865815ec0f5e60c6970
 
 // 画像の解析結果が入ったテーブル
 let analyzedTable = new Map();
+let n = 0;
+
+const main = () => {
+  addOnMouseMoveListner();
+}
+
+const addOnMouseMoveListner = () => {
+   let imgList = Array.prototype.slice.call(document.getElementsByTagName("img"));
+   imgList.forEach(img => {
+     if (img.src && !img.hasAttribute("data-tesseractId")) {
+       img.setAttribute("data-tesseractId", n);
+       n += 1;
+       img.onmousemove = onMouseMove; 
+     }
+   })
+}
+
+// 画像の上をカーソルが移動したときに呼び出される
+const onMouseMove = (e) => {
+  const img = e.target;
+  const md = document.getElementById(DIALOG_ID);
+  const tesseractId = img.getAttribute("data-tesseractId");
+
+  if (!md) {
+    return;
+  }
+  if (!analyzedTable.has(tesseractId)) {
+    analyze(img);
+  }
+
+  const posX = e.offsetX ? (e.offsetX) : e.pageX - img.offsetLeft;
+  const posY = e.offsetY ? (e.offsetY) : e.pageY - img.offsetTop;
+  const textAtCursor = getTextAtCursor(img, posX, posY);
+
+  if (textAtCursor) {
+    chrome.runtime.sendMessage(MD_EXTENSION_ID, {
+      type: "text",
+      text: textAtCursor,
+      mustIncludeOriginalText: false,
+      enableShortWord: true
+    });
+  }
+}
+
+const analyze = (img) => {
+  const tesseractId = img.getAttribute("data-tesseractId");
+  if (analyzedTable.has(tesseractId)) {
+    return;
+  }
+  analyzedTable.set(tesseractId, null);
+  let analyzePromise = worker.recognize(img, 'eng')
+    .progress((message) => {
+      if (message.status == "recognizing text") {
+        const progress = parseInt(message.progress * 100);
+        chrome.runtime.sendMessage(
+          {
+            id: tesseractId,
+            title: "Analyzing Image-" + tesseractId + "...",
+            message: progress + "% analyzed!",
+          }
+        )
+      }
+    })
+    .then(function(result) {
+      analyzedTable.set(tesseractId, result);
+    })
+  return analyzePromise;
+}
 
 // カーソルの位置にある単語を返す
 const getTextAtCursor = (img, x, y) => {
   const tesseractId = img.getAttribute("data-tesseractId");
-  if (!analyzedTable.has(tesseractId)) {
+  if (!analyzedTable.has(tesseractId) || !analyzedTable.get(tesseractId)) {
     return null;
   }
   const analyzed = analyzedTable.get(tesseractId);
@@ -27,60 +98,5 @@ const getTextAtCursor = (img, x, y) => {
   }
   return null;
 }
-
-// 画像の上をカーソルが移動したときに呼び出される
-const onMouseMove = (e) => {
-  const img = e.target;
-  const posX = e.offsetX ? (e.offsetX) : e.pageX - img.offsetLeft;
-  const posY = e.offsetY ? (e.offsetY) : e.pageY - img.offsetTop;
-  const textAtCursor = getTextAtCursor(img, posX, posY);
-  console.log("cursor pos: (" + posX + ", " + posY + ")");
-  console.log("text: " + textAtCursor);
-
-  if (textAtCursor) {
-    chrome.runtime.sendMessage(MD_EXTENSION_ID, {
-      type: "text",
-      text: textAtCursor,
-      mustIncludeOriginalText: false,
-      enableShortWord: true
-    });
-  }
-}
-
-
-const analyze = (img) => {
-  const tesseractId = img.getAttribute("data-tesseractId");
-  if (analyzedTable.has(tesseractId)) {
-    return;
-  }
-  worker.recognize(img, 'eng')
-    .progress(function(message) {
-      console.log(message);
-    })
-    .catch(err => console.error(err))
-    .then(function(result) {
-      analyzedTable.set(tesseractId, result);
-      console.log(result);
-    })
-    .finally(resultOrError => console.log(resultOrError))
-}
-
-// ページ中の画像を全て解析する
-const analyzeAll = () => {
-  let imgList = Array.prototype.slice.call(document.getElementsByTagName("img"));
-  let n = 0;
-  imgList.forEach(img => {
-    if (img.src) {
-      img.setAttribute("data-tesseractId", n);
-      n += 1;
-      analyze(img);
-      img.onmousemove = onMouseMove; 
-    }
-  })
-}
-
-const main = () => {
-  analyzeAll();
-};
 
 window.onload = () => main();
