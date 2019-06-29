@@ -71,21 +71,6 @@ var options = {
         }))
       }
     }]),
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "popup.html"),
-      filename: "popup.html",
-      chunks: ["popup"]
-    }),
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "options.html"),
-      filename: "options.html",
-      chunks: ["options"]
-    }),
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "background.html"),
-      filename: "background.html",
-      chunks: ["background"]
-    }),
     new WriteFilePlugin()
   ]
 };
