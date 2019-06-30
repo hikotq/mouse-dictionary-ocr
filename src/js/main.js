@@ -61,6 +61,14 @@ const analyze = (img) => {
     return;
   }
   analyzedTable.set(tesseractId, null);
+
+  chrome.runtime.sendMessage(
+    {
+      id: tesseractId,
+      title: "Analyzing Image-" + tesseractId,
+      message: "0% analyzed!",
+    }
+  )
   let analyzePromise = worker.recognize(img, 'eng')
     .progress((message) => {
       if (message.status == "recognizing text") {
@@ -68,7 +76,7 @@ const analyze = (img) => {
         chrome.runtime.sendMessage(
           {
             id: tesseractId,
-            title: "Analyzing Image-" + tesseractId + "...",
+            title: "Analyzing Image-" + tesseractId,
             message: progress + "% analyzed!",
           }
         )
