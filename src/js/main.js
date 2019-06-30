@@ -1,10 +1,12 @@
 import '../img/icon48.png';
 import '../img/icon128.png';
 
+import utils from './lib/utils';
+
 import { TesseractWorker } from 'tesseract.js';
 const worker = new TesseractWorker();
 
-const MD_EXTENSION_ID = "dnclbikcihnpjohihfcmmldgkjnebgnj";
+const MD_EXTENSION_ID = utils.getMdExtensionId();
 const DIALOG_ID = "____MOUSE_DICTIONARY_cf744bd007850b04601dc865815ec0f5e60c6970";
 
 // 画像の解析結果が入ったテーブル
