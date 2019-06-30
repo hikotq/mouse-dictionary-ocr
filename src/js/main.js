@@ -47,10 +47,14 @@ const observeMouseDictionary = () => {
 const addOnMouseMoveListner = () => {
    let imgList = Array.prototype.slice.call(document.getElementsByTagName("img"));
    imgList.forEach(img => {
-     if (img.src && !img.hasAttribute("data-tesseractId")) {
+     if (
+       img.src
+       && img.src.match(/.*(png|jpg|bmp|pbm)/i)
+       && !img.hasAttribute("data-tesseractId")
+     ) {
        img.setAttribute("data-tesseractId", n);
        n += 1;
-       img.onmousemove = onMouseMove; 
+       img.onmousemove = onMouseMove;
      }
    })
 }
