@@ -14,7 +14,34 @@ let analyzedTable = new Map();
 let n = 0;
 
 const main = () => {
-  addOnMouseMoveListner();
+  const body = document.querySelector("body");
+  const observer = new MutationObserver(() => {
+    const md = document.getElementById(DIALOG_ID);
+    if (md) {
+      observer.disconnect();
+      addOnMouseMoveListner();
+      observeMouseDictionary();
+    }
+  });
+  const config = { childList: true };
+  observer.observe(body, config);
+}
+
+const observeMouseDictionary = () => {
+  const md = document.getElementById(DIALOG_ID);
+  let prevIsHidden = md.getAttribute("data-mouse-dictionary-hidden");
+
+  const observer = new MutationObserver(() => {
+    const md = document.getElementById(DIALOG_ID);
+    const isHidden = md.getAttribute("data-mouse-dictionary-hidden") === "true";
+    if (!isHidden && prevIsHidden) {
+      addOnMouseMoveListner();
+    }
+    prevIsHidden = isHidden;
+  });
+
+  const config = { attributes: true };
+  observer.observe(md, config);
 }
 
 const addOnMouseMoveListner = () => {
@@ -34,7 +61,7 @@ const onMouseMove = (e) => {
   const md = document.getElementById(DIALOG_ID);
   const tesseractId = img.getAttribute("data-tesseractId");
 
-  if (!md) {
+  if (!md || md.getAttribute("data-mouse-dictionary-hidden") === "true") {
     return;
   }
   if (!analyzedTable.has(tesseractId)) {
@@ -109,4 +136,4 @@ const getTextAtCursor = (img, x, y) => {
   return null;
 }
 
-window.onload = () => main();
+main();
