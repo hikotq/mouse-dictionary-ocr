@@ -2984,6 +2984,11 @@ once@^1.3.0, once@^1.3.1, once@^1.4.0:
   dependencies:
     wrappy "1"
 
+opencollective-postinstall@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/opencollective-postinstall/-/opencollective-postinstall-2.0.2.tgz#5657f1bede69b6e33a45939b061eb53d3c6c3a89"
+  integrity sha512-pVOEP16TrAO2/fjej1IdOyupJY8KDUM1CvsaScRbw6oddvpQoOfGk4ywha0HKKVAD6RkW4x6Q+tNBwhf3Bgpuw==
+
 opn@^5.1.0:
   version "5.4.0"
   resolved "https://registry.yarnpkg.com/opn/-/opn-5.4.0.tgz#cb545e7aab78562beb11aa3bfabc7042e1761035"
@@ -4116,15 +4121,16 @@ tesseract.js-utils@^1.0.0-beta.8:
     is-url "^1.2.4"
     zlibjs "^0.3.1"
 
-tesseract.js@^2.0.0-alpha.10:
-  version "2.0.0-alpha.10"
-  resolved "https://registry.yarnpkg.com/tesseract.js/-/tesseract.js-2.0.0-alpha.10.tgz#7e451ea62f08bfaf129281e8c4a228946884ce2d"
-  integrity sha512-DnwYD5ZPsAzJSJLcvzY1SaZsTt20JrANAmrq2UGFLFcu4NWqywITw3y9YY3hUU7DlFVjU+Bfi7Dygs93XxOesA==
+tesseract.js@^2.0.0-alpha.13:
+  version "2.0.0-alpha.13"
+  resolved "https://registry.yarnpkg.com/tesseract.js/-/tesseract.js-2.0.0-alpha.13.tgz#87bb3d71fe646c0993b073552241d203d9dfef3a"
+  integrity sha512-ZFEdak7jWtN5vIDwZcw8OdAqA7RvG0QRailZKQFS5rtnl/Yy5vC4WcqfJh9+o+cA3bdr2zV5SENoWDtEihlSVA==
   dependencies:
     axios "^0.18.0"
     check-types "^7.4.0"
     is-url "1.2.2"
     node-fetch "^2.3.0"
+    opencollective-postinstall "^2.0.2"
     resolve-url "^0.2.1"
     tesseract.js-core "^2.0.0-beta.10"
     tesseract.js-utils "^1.0.0-beta.8"
