@@ -21,6 +21,6 @@
     "webpack-cli": "^3.2.1"
   },
   "dependencies": {
-    "tesseract.js": "^2.0.0-alpha.10"
+    "tesseract.js": "^2.1.4"
   }
 }
